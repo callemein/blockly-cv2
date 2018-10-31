@@ -210,10 +210,10 @@ Blockly.Blocks['waitkey'] = {
         .appendField("waitKey");
     this.appendDummyInput()
         .appendField("millis")
-        .appendField(new Blockly.FieldTextInput("0"), "millis");
+        .appendField(new Blockly.FieldTextInput("40"), "millis");
     this.appendDummyInput()
         .appendField("key")
-        .appendField(new Blockly.FieldTextInput("27"), "key");
+        .appendField(new Blockly.FieldTextInput("q"), "key");
     this.appendStatementInput("statement");
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -224,7 +224,7 @@ Blockly.Python['waitkey'] = function(block) {
   var m = block.getFieldValue('millis');
   var k = block.getFieldValue('key');
   var s = Blockly.Python.statementToCode(block, 'statement') || '  pass\n';
-  var code = "if cv2.waitKey("+m+")&0xff == "+k+":\n"+s;
+  var code = "if cv2.waitKey("+m+") == ord('"+k+"'):\n"+s;
   //return [code, Blockly.Python.ORDER_NONE];
   return code;
 };
