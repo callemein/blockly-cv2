@@ -1,18 +1,41 @@
-from cStringIO import StringIO
+from io import StringIO
 import sys, socket, threading, time, datetime, os
+from multiprocessing import Process
 import cv2
 import numpy as np
 
-#~ class MyThread( threading.Thread ):
-    #~ def __init__(self, code):
-        #~ threading.Thread.__init__(self)
-        #~ self.code=code
-    #~ def run( self ):
-        #~ #try:
-        #~ exec( compile(self.code, "lala", "exec") )
-        #~ #except Exception, e:
-        #~ #    print e
+global Threads
 
+threads = []
+
+class MyThread( threading.Thread ):
+    def __init__(self, code):
+        super(MyThread, self).__init__()
+        self._stop_event = threading.Event()
+        self.code = code
+        
+    def run( self ):
+        try:
+            exec( compile(self.code, "lala", "exec") )
+        except Exception as e:
+            print(str(e))
+           
+    def stop(self):
+        print(self.exec_ptr)
+        self._stop_event.set()
+        exit(0)
+
+    def stopped(self):
+        return self._stop_event.is_set()
+        
+
+def RunProgram(code):
+    try:
+        exec( compile(code, "lala", "exec") )
+    except Exception as e:
+        print(str(e))
+        
+    return 0
 
 def postdata(environ):
     request_body_size = int(environ['CONTENT_LENGTH'])
@@ -29,8 +52,9 @@ def save(ext,environ):
         f.write(code)
         f.close()
         return "saved ok."
-    except Exception,e:
-        print e
+
+    except Exception as e:
+        #print(str(e))
         return str(e)
 
 def load(environ):
@@ -40,13 +64,15 @@ def load(environ):
         f = open("prj/"+name +"/code.xml", "rb")
         code = f.read()
         f.close()
+
     except IOError as e:
-        print e; 
+        #print(str(e))
         return str(e)
+
     return code
 
 def application(environ, start_response):
-        
+
     url = environ['PATH_INFO'];
     data = ""
     if url == "/":
@@ -54,22 +80,33 @@ def application(environ, start_response):
     if url.startswith('/code'):
         sys.stdout = sys.stderr = mystdout = StringIO()
         try:          
-            #MyThread(request_body).start()
-            exec( compile( postdata(environ), "blockly", "exec" ) )
+            new_thread = Process(target=RunProgram, args=(postdata(environ),))
+            threads.append(new_thread)
+
+            new_thread.start()
+            
+            #exec( compile( postdata(environ), "blockly", "exec" ) )
             data = mystdout.getvalue()
-        except Exception,e:
-            print e
+        except Exception as e:
+            #print(str(e))
             data = str(e)
         sys.stdout = sys.__stdout__
         sys.stderr = sys.__stderr__
+    elif url.startswith('/stop'):
+        print('Stopping Threads')
+        for t in threads:
+            t.terminate()
     elif url.startswith('/save_code'):
         data = save(".py",environ)
     elif url.startswith('/save_xml'):
         data = save(".xml",environ)
     elif url.startswith('/load'):
+        print('Loading ...')
+        print(environ)
         data = load(environ)
     else: # load html/js/resources
         try:
+            print("Sending - " + str(url))
             f = open(url[1:])
             data = f.read()
             f.close()        
