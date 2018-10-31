@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
@@ -8,10 +8,10 @@
   <script src="js/python_compressed.js"></script>
   <script src="js/en.js"></script>
   <script src="js/cv2.js"></script>
-  <!--script src="js/v24.js"></script-->
-  <script src="js/v30.js"></script>
-  <script src="js/v30/python.js"></script>
-  <script src="js/v30/blocks.js"></script>
+  <script src="js/v24.js"></script>
+  <!--script src="js/v30.js"></script-->
+  <script src="js/v24/python.js"></script>
+  <script src="js/v24/blocks.js"></script>
   <script>
 
 
@@ -57,9 +57,15 @@
       theError=s;
       if (theError) theErrorCounter = 100;
     }
+    
     function runPy() {
       ajax("/code", pyCode(), getPyErr);
     }
+    
+    function stopPy() {
+      ajax("/stop");
+    }
+    
     function savePrj() {
       var name = prompt("Please enter the project name");
       ajax("/save_code", name + "\n" + pyCode(), getPyErr);
@@ -97,7 +103,6 @@
     #blocklyDiv {
         width: 100%;
         height: 90%;
-        position: absolute;
         top: 60px;
         left: 0;
         opacity: 50%;
@@ -105,7 +110,7 @@
     #blocklyCode {
         position: absolute;
         top: 30px;
-        left: 680px;
+        right: 400px;
         opacity: 50%;
     }
 
@@ -117,6 +122,7 @@
 <body>
    <p>
     <button onclick="runPy()">Run Python Code</button> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <button onclick="stopPy()">Stop Python Code</button> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     <button onclick="savePrj()">Save</button>
     <button onclick="loadPrj()">Load</button>
   </p>
@@ -146,6 +152,8 @@
   <block type="findobjects"></block>
   <block type="VideoWriter_VideoWriter"></block>
   <block type="VideoWriter_write"></block>
+</category>
+  <!--
   <category name="core">
     <category name="Manipulate">
       <block type="core_flip"></block>
@@ -822,6 +830,7 @@
     <block type="ximgproc_GuidedFilter_filter"></block>
   </category>
 </category>
+-->
   
 <hr>
 
@@ -859,10 +868,10 @@
           </block>
         </value>
       </block>
-      <!--block type="controls_forEach"></block>
+      <block type="controls_forEach"></block>
       <block type="forRange"></block>
       <block type="forEnum"></block>
-      <block type="controls_flow_statements"></block-->
+      <block type="controls_flow_statements"></block>
     </category>
     <category name="Math">
       <block type="math_number"></block>
