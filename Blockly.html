@@ -82,12 +82,17 @@
       var txt = ajax("/load_auto_save", 'test', fromXml, getPyErr);
     }
 
+    function reset()
+    {
+      var txt = ajax("/clear_ws", 'test', fromXml, getPyErr);
+      location.reload();
+    }
+
     function loadPrj()
     {
       var name = prompt("Please enter the project name");
       var txt = ajax("/load", name, fromXml, getPyErr);
     }
-    
 
     setInterval(showPy, 100);
 
@@ -135,8 +140,9 @@
 </head>
 <body>
    <p>
-    <button onclick="runPy()">Run Python Code</button> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <button onclick="stopPy()">Stop Python Code</button> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <button onclick="runPy()">RUN</button> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <button onclick="stopPy()">STOP</button> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <button onclick="reset()">RESET</button> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     <button onclick="savePrj()">Save</button>
     <button onclick="loadPrj()">Load</button>
   </p>
@@ -1040,6 +1046,7 @@
     Blockly.inject(document.getElementById('blocklyDiv'),
         {toolbox: document.getElementById('toolbox')});
     loadAutoSave();
+        
   </script>
   <div style="direction: ltr;" class="blocklyWidgetDiv"></div>
 

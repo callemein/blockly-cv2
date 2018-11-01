@@ -75,7 +75,7 @@ def load(environ):
     return code
 
 def clear_ws():
-    try: os.mkdir("rm ws_code.xml");
+    try: os.remove("ws_code.xml");
     except: pass
 
 def save_ws(environ):
@@ -135,6 +135,8 @@ def application(environ, start_response):
         data = save(".xml",environ)
     elif url.startswith('/load_auto_save'):
         data = load_ws()
+    elif url.startswith('/clear_ws'):
+        data = clear_ws()
     elif url.startswith('/load'):
         data = load(environ)
     else: # load html/js/resources
