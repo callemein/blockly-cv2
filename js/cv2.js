@@ -386,6 +386,12 @@ Blockly.Blocks['videocapture'] = {
     this.appendDummyInput()
         .appendField("VideoCapture")
         .appendField(new Blockly.FieldTextInput("0"), "input")
+        .appendField("breedte")
+        .appendField(new Blockly.FieldTextInput("1240"), "w")
+        .appendField("hoogte")
+        .appendField(new Blockly.FieldTextInput("720"), "h")
+        .appendField("Snelheid")
+        .appendField(new Blockly.FieldTextInput("25"), "fps")
         .appendField(new Blockly.FieldVariable('img'), 'img');
     this.appendStatementInput("statements")
         .setCheck("image");
@@ -404,11 +410,20 @@ Blockly.Blocks['videocapture'] = {
 };
 Blockly.Python['videocapture'] = function(block) {
   var text_input = block.getFieldValue('input');
+  var w = block.getFieldValue('w');
+  var h = block.getFieldValue('h');
+  var fps = block.getFieldValue('fps');
   var statements_name = Blockly.Python.statementToCode(block, 'statements');
   var img_name = block.getFieldValue('img');
-  var code = "cap=cv2.VideoCapture("+text_input+")\n" +
-             "if not cap.isOpened(): raise Exception(\"your input:"+text_input+" could not be opened !\")\n" +
-             "while cap.isOpened():\n  r,"+img_name+"=cap.read()\n  if r==False: break\n"+statements_name;
+  var code = "cap = cv2.VideoCapture("+text_input+")\n" +
+             "if not cap.isOpened():\n" +
+             "    raise Exception(\"your input:" + text_input + " could not be opened !\")\n\n" +
+             "cap.set(cv2.CAP_PROP_FRAME_WIDTH, " + w + ")\n"+
+             "cap.set(cv2.CAP_PROP_FRAME_HEIGHT, " + h + ")\n"+
+             "cap.set(cv2.CAP_PROP_FPS, " + fps + ")\n\n"+
+             "while cap.isOpened():\n"+
+             "  r," + img_name + " = cap.read()\n  if r==False: break\n"+
+             statements_name;
   return code;
 };
 
@@ -553,6 +568,7 @@ Blockly.Blocks['newimage'] = {
     this.setTooltip('make a new, empty image');
   }
 };
+
 Blockly.Python['newimage'] = function(block) {
   var w = block.getFieldValue('w');
   var h = block.getFieldValue('h');
@@ -749,3 +765,39 @@ Blockly.Python['text_eval'] = function(block) {
   var code = c + "\n";
   return code;
 };
+
+
+Blockly.Blocks['rotate'] = {
+  init: function() {
+    
+    this.setColour(45);  
+    this.appendValueInput('input')
+        .setCheck('image')
+        .appendField('rotate');
+        
+    this.appendDummyInput()
+        .appendField("angle")
+        .appendField(new Blockly.FieldTextInput("90"), "angle")
+    
+    this.appendValueInput('output')
+        .setCheck('image')
+        .appendField('into');
+        
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+    this.setInputsInline(true);
+    this.setTooltip('');
+  }
+};
+
+Blockly.Python['rotate'] = function(block) {
+  var angle = block.getFieldValue('angle');
+  var input = Blockly.Python.valueToCode(block, 'input', Blockly.Python.ORDER_ATOMIC);
+  var output = Blockly.Python.valueToCode(block, 'output', Blockly.Python.ORDER_ATOMIC);
+  
+  var code = "rows,cols = " + input +".shape[:2]\n"+
+             "M = cv2.getRotationMatrix2D((cols/2,rows/2)," + angle + ",1)\n"+
+              output + " = cv2.warpAffine(" + input + ",M,(cols,rows))\n";
+  return code;
+};
+
