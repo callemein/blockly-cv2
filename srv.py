@@ -74,6 +74,35 @@ def load(environ):
 
     return code
 
+def clear_ws():
+    try: os.mkdir("rm ws_code.xml");
+    except: pass
+
+def save_ws(environ):
+    try:
+        code = postdata(environ)
+        
+        f = open("ws_code.xml", "wb")
+        f.write(code)
+        f.close()
+        return "Autosave ok."
+
+    except Exception as e:
+        #print(str(e))
+        return str(e) 
+
+def load_ws():
+    code = ""
+    try:
+        f = open("ws_code.xml", "rb")
+        code = f.read()
+        f.close()
+
+    except IOError as e:
+        return ""
+
+    return code
+
 def application(environ, start_response):
     url = environ['PATH_INFO'];
     data = ""
@@ -98,13 +127,15 @@ def application(environ, start_response):
         print('Stopping Threads')
         for t in gThreads:
             t.terminate()
+    elif url.startswith('/auto_save'):
+        save_ws(environ)
     elif url.startswith('/save_code'):
         data = save(".py",environ)
     elif url.startswith('/save_xml'):
         data = save(".xml",environ)
+    elif url.startswith('/load_auto_save'):
+        data = load_ws()
     elif url.startswith('/load'):
-        print('Loading ...')
-        print(environ)
         data = load(environ)
     else: # load html/js/resources
         try:

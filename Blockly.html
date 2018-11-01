@@ -59,6 +59,7 @@
     }
     
     function runPy() {
+      autoSave();
       ajax("/code", pyCode(), getPyErr);
     }
     
@@ -71,11 +72,22 @@
       ajax("/save_code", name + "\n" + pyCode(), getPyErr);
       ajax("/save_xml",  name + "\n" + toXml(), getPyErr);
     }
+    
+    function autoSave() {
+      ajax("/auto_save", toXml(), getPyErr);
+    }
+    
+    function loadAutoSave()
+    {
+      var txt = ajax("/load_auto_save", 'test', fromXml, getPyErr);
+    }
+
     function loadPrj()
     {
       var name = prompt("Please enter the project name");
       var txt = ajax("/load", name, fromXml, getPyErr);
     }
+    
 
     setInterval(showPy, 100);
 
@@ -1027,7 +1039,7 @@
   <script>
     Blockly.inject(document.getElementById('blocklyDiv'),
         {toolbox: document.getElementById('toolbox')});
-
+    loadAutoSave();
   </script>
   <div style="direction: ltr;" class="blocklyWidgetDiv"></div>
 
