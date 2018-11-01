@@ -8,6 +8,7 @@
   <script src="js/python_compressed.js"></script>
   <script src="js/en.js"></script>
   <script src="js/cv2.js"></script>
+  <script src="js/servo.js"></script>
   <script src="js/v24.js"></script>
   <!--script src="js/v30.js"></script-->
   <script src="js/v24/python.js"></script>
@@ -26,7 +27,7 @@
 
     function pyCode() {
       var code = Blockly.Python.workspaceToCode();
-      return "\nimport cv2\nimport numpy as np\n\n" + code + "cv2.destroyAllWindows()"
+      return "\nimport cv2\nimport numpy as np\nimport servobot\n\n" + code + "cv2.destroyAllWindows()"
     }
 
     function showPy() {
@@ -190,6 +191,11 @@
   <block type="drawcircle"></block>
 </category>
 
+</category>
+
+<category name="servo">
+  <block type="initservo"></block>
+  <block type="servosetangle"></block>
 </category>
   <!--
   

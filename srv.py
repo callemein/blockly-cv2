@@ -3,6 +3,7 @@ import sys, socket, threading, time, datetime, os
 from multiprocessing import Process, Queue
 import cv2
 import numpy as np
+import servobot
 
 global gThreads
 global qQueue
