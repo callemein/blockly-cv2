@@ -802,6 +802,33 @@ Blockly.Python['rotate'] = function(block) {
 };
 
 
+
+Blockly.Blocks['resize'] = {
+  init: function() {
+    
+    this.setColour(45);  
+    this.appendValueInput('input')
+        .setCheck('image')
+        .appendField('resize image');
+            
+    this.appendValueInput('size')
+        .appendField('size');
+        
+    this.setOutput(true, 'image');
+    this.setInputsInline(true);
+    this.setTooltip('');
+  }
+};
+
+Blockly.Python['resize'] = function(block) {
+  var image = Blockly.Python.valueToCode(block, 'input', Blockly.Python.ORDER_ATOMIC);
+  var size = Blockly.Python.valueToCode(block, 'size', Blockly.Python.ORDER_ATOMIC);
+  
+  var code = "cv2.resize("+image+", " + size + ")\n";
+  return [code, Blockly.Python.ORDER_NONE];
+};
+
+
 Blockly.Blocks['drawrectangle'] = {
   init: function() {
     
