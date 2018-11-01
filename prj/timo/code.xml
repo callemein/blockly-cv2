@@ -1,0 +1,426 @@
+<xml xmlns="http://www.w3.org/1999/xhtml">
+  <block type="variables_set" id="1" inline="true" x="16" y="-18">
+    <field name="VAR">breedte</field>
+    <value name="VALUE">
+      <block type="math_number" id="2">
+        <field name="NUM">640</field>
+      </block>
+    </value>
+    <next>
+      <block type="variables_set" id="3" inline="true">
+        <field name="VAR">hoogte</field>
+        <value name="VALUE">
+          <block type="math_number" id="4">
+            <field name="NUM">480</field>
+          </block>
+        </value>
+        <next>
+          <block type="variables_set" id="5" inline="true">
+            <field name="VAR">breedte_klein</field>
+            <value name="VALUE">
+              <block type="math_arithmetic" id="6" inline="true">
+                <field name="OP">DIVIDE</field>
+                <value name="A">
+                  <block type="variables_get" id="7">
+                    <field name="VAR">breedte</field>
+                  </block>
+                </value>
+                <value name="B">
+                  <block type="math_number" id="8">
+                    <field name="NUM">4</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+            <next>
+              <block type="variables_set" id="9" inline="true">
+                <field name="VAR">hoogte_klein</field>
+                <value name="VALUE">
+                  <block type="math_arithmetic" id="10" inline="true">
+                    <field name="OP">DIVIDE</field>
+                    <value name="A">
+                      <block type="variables_get" id="11">
+                        <field name="VAR">hoogte</field>
+                      </block>
+                    </value>
+                    <value name="B">
+                      <block type="math_number" id="12">
+                        <field name="NUM">4</field>
+                      </block>
+                    </value>
+                  </block>
+                </value>
+                <next>
+                  <block type="initservo" id="13">
+                    <field name="servo">servo</field>
+                    <next>
+                      <block type="variables_set" id="636" inline="true">
+                        <field name="VAR">servo_x</field>
+                        <value name="VALUE">
+                          <block type="math_number" id="637">
+                            <field name="NUM">40</field>
+                          </block>
+                        </value>
+                        <next>
+                          <block type="servosetangle" id="14">
+                            <field name="servo">servo</field>
+                            <field name="angle">servo_x</field>
+                            <next>
+                              <block type="cascade" id="15">
+                                <field name="cascade">cascade</field>
+                                <field name="xmlfile">haarcascades/haarcascade_frontalface_alt2.xml</field>
+                                <next>
+                                  <block type="videocapture" id="16">
+                                    <field name="input">0</field>
+                                    <field name="w">breedte</field>
+                                    <field name="h">hoogte</field>
+                                    <field name="fps">10</field>
+                                    <field name="img">img</field>
+                                    <statement name="statements">
+                                      <block type="variables_set" id="17" inline="true">
+                                        <field name="VAR">gray_img</field>
+                                        <value name="VALUE">
+                                          <block type="cvtcolor" id="18" inline="false">
+                                            <field name="flag">cv2.COLOR_BGR2GRAY</field>
+                                            <value name="img">
+                                              <block type="resize" id="19" inline="true">
+                                                <value name="input">
+                                                  <block type="variables_get" id="20">
+                                                    <field name="VAR">img</field>
+                                                  </block>
+                                                </value>
+                                                <value name="size">
+                                                  <block type="size" id="21">
+                                                    <field name="w">breedte_klein</field>
+                                                    <field name="h">hoogte_klein</field>
+                                                  </block>
+                                                </value>
+                                              </block>
+                                            </value>
+                                          </block>
+                                        </value>
+                                        <next>
+                                          <block type="rotate" id="22" inline="true">
+                                            <field name="angle">180</field>
+                                            <value name="input">
+                                              <block type="variables_get" id="23">
+                                                <field name="VAR">gray_img</field>
+                                              </block>
+                                            </value>
+                                            <value name="output">
+                                              <block type="variables_get" id="24">
+                                                <field name="VAR">r_img</field>
+                                              </block>
+                                            </value>
+                                            <next>
+                                              <block type="variables_set" id="81" inline="true">
+                                                <field name="VAR">faces</field>
+                                                <value name="VALUE">
+                                                  <block type="findobjects" id="83" inline="false">
+                                                    <field name="cascade">cascade</field>
+                                                    <value name="image">
+                                                      <block type="variables_get" id="84">
+                                                        <field name="VAR">r_img</field>
+                                                      </block>
+                                                    </value>
+                                                  </block>
+                                                </value>
+                                                <next>
+                                                  <block type="controls_if" id="91" inline="false">
+                                                    <value name="IF0">
+                                                      <block type="logic_compare" id="112" inline="true">
+                                                        <field name="OP">GT</field>
+                                                        <value name="A">
+                                                          <block type="lists_length" id="105" inline="false">
+                                                            <value name="VALUE">
+                                                              <block type="variables_get" id="137">
+                                                                <field name="VAR">faces</field>
+                                                              </block>
+                                                            </value>
+                                                          </block>
+                                                        </value>
+                                                        <value name="B">
+                                                          <block type="math_number" id="156">
+                                                            <field name="NUM">0</field>
+                                                          </block>
+                                                        </value>
+                                                      </block>
+                                                    </value>
+                                                    <statement name="DO0">
+                                                      <block type="variables_set" id="70" inline="true">
+                                                        <field name="VAR">face</field>
+                                                        <value name="VALUE">
+                                                          <block type="lists_getIndex" id="68" inline="true">
+                                                            <mutation statement="false" at="false"></mutation>
+                                                            <field name="MODE">GET</field>
+                                                            <field name="WHERE">FIRST</field>
+                                                            <value name="VALUE">
+                                                              <block type="findobjects" id="26" inline="false">
+                                                                <field name="cascade">cascade</field>
+                                                                <value name="image">
+                                                                  <block type="variables_get" id="27">
+                                                                    <field name="VAR">r_img</field>
+                                                                  </block>
+                                                                </value>
+                                                              </block>
+                                                            </value>
+                                                          </block>
+                                                        </value>
+                                                        <next>
+                                                          <block type="drawrectangle" id="28" inline="false">
+                                                            <field name="size">2</field>
+                                                            <value name="image">
+                                                              <block type="variables_get" id="29">
+                                                                <field name="VAR">r_img</field>
+                                                              </block>
+                                                            </value>
+                                                            <value name="tl">
+                                                              <block type="point_tl" id="30" inline="false">
+                                                                <value name="rect">
+                                                                  <block type="variables_get" id="54">
+                                                                    <field name="VAR">face</field>
+                                                                  </block>
+                                                                </value>
+                                                              </block>
+                                                            </value>
+                                                            <value name="br">
+                                                              <block type="point_br" id="32" inline="false">
+                                                                <value name="rect">
+                                                                  <block type="variables_get" id="33">
+                                                                    <field name="VAR">face</field>
+                                                                  </block>
+                                                                </value>
+                                                              </block>
+                                                            </value>
+                                                            <value name="color">
+                                                              <block type="colour_picker" id="34">
+                                                                <field name="COLOUR">#ff0000</field>
+                                                              </block>
+                                                            </value>
+                                                            <next>
+                                                              <block type="variables_set" id="314" inline="true">
+                                                                <field name="VAR">x1</field>
+                                                                <value name="VALUE">
+                                                                  <block type="lists_getIndex" id="347" inline="true">
+                                                                    <mutation statement="false" at="true"></mutation>
+                                                                    <field name="MODE">GET</field>
+                                                                    <field name="WHERE">FROM_START</field>
+                                                                    <value name="VALUE">
+                                                                      <block type="tuple" id="390" inline="false">
+                                                                        <value name="X">
+                                                                          <block type="point_tl" id="372" inline="false">
+                                                                            <value name="rect">
+                                                                              <block type="variables_get" id="373">
+                                                                                <field name="VAR">face</field>
+                                                                              </block>
+                                                                            </value>
+                                                                          </block>
+                                                                        </value>
+                                                                      </block>
+                                                                    </value>
+                                                                    <value name="AT">
+                                                                      <block type="math_number" id="367">
+                                                                        <field name="NUM">1</field>
+                                                                      </block>
+                                                                    </value>
+                                                                  </block>
+                                                                </value>
+                                                                <next>
+                                                                  <block type="variables_set" id="368" inline="true">
+                                                                    <field name="VAR">x2</field>
+                                                                    <value name="VALUE">
+                                                                      <block type="lists_getIndex" id="369" inline="true">
+                                                                        <mutation statement="false" at="true"></mutation>
+                                                                        <field name="MODE">GET</field>
+                                                                        <field name="WHERE">FROM_START</field>
+                                                                        <value name="VALUE">
+                                                                          <block type="tuple" id="391" inline="false">
+                                                                            <value name="X">
+                                                                              <block type="point_br" id="733" inline="false">
+                                                                                <value name="rect">
+                                                                                  <block type="variables_get" id="734">
+                                                                                    <field name="VAR">face</field>
+                                                                                  </block>
+                                                                                </value>
+                                                                              </block>
+                                                                            </value>
+                                                                          </block>
+                                                                        </value>
+                                                                        <value name="AT">
+                                                                          <block type="math_number" id="371">
+                                                                            <field name="NUM">1</field>
+                                                                          </block>
+                                                                        </value>
+                                                                      </block>
+                                                                    </value>
+                                                                    <next>
+                                                                      <block type="variables_set" id="394" inline="true">
+                                                                        <field name="VAR">x</field>
+                                                                        <value name="VALUE">
+                                                                          <block type="math_arithmetic" id="507" inline="true">
+                                                                            <field name="OP">ADD</field>
+                                                                            <value name="A">
+                                                                              <block type="variables_get" id="508">
+                                                                                <field name="VAR">x1</field>
+                                                                              </block>
+                                                                            </value>
+                                                                            <value name="B">
+                                                                              <block type="math_arithmetic" id="418" inline="true">
+                                                                                <field name="OP">DIVIDE</field>
+                                                                                <value name="A">
+                                                                                  <block type="math_arithmetic" id="437" inline="true">
+                                                                                    <field name="OP">MINUS</field>
+                                                                                    <value name="A">
+                                                                                      <block type="variables_get" id="487">
+                                                                                        <field name="VAR">x2</field>
+                                                                                      </block>
+                                                                                    </value>
+                                                                                    <value name="B">
+                                                                                      <block type="variables_get" id="488">
+                                                                                        <field name="VAR">x1</field>
+                                                                                      </block>
+                                                                                    </value>
+                                                                                  </block>
+                                                                                </value>
+                                                                                <value name="B">
+                                                                                  <block type="math_number" id="456">
+                                                                                    <field name="NUM">2</field>
+                                                                                  </block>
+                                                                                </value>
+                                                                              </block>
+                                                                            </value>
+                                                                          </block>
+                                                                        </value>
+                                                                        <next>
+                                                                          <block type="controls_if" id="515" inline="false">
+                                                                            <mutation else="1"></mutation>
+                                                                            <value name="IF0">
+                                                                              <block type="logic_compare" id="522" inline="true">
+                                                                                <field name="OP">LT</field>
+                                                                                <value name="A">
+                                                                                  <block type="variables_get" id="553">
+                                                                                    <field name="VAR">x</field>
+                                                                                  </block>
+                                                                                </value>
+                                                                                <value name="B">
+                                                                                  <block type="math_arithmetic" id="572" inline="true">
+                                                                                    <field name="OP">DIVIDE</field>
+                                                                                    <value name="A">
+                                                                                      <block type="variables_get" id="603">
+                                                                                        <field name="VAR">breedte_klein</field>
+                                                                                      </block>
+                                                                                    </value>
+                                                                                    <value name="B">
+                                                                                      <block type="math_number" id="604">
+                                                                                        <field name="NUM">2</field>
+                                                                                      </block>
+                                                                                    </value>
+                                                                                  </block>
+                                                                                </value>
+                                                                              </block>
+                                                                            </value>
+                                                                            <statement name="DO0">
+                                                                              <block type="variables_set" id="670" inline="true">
+                                                                                <field name="VAR">servo_x</field>
+                                                                                <value name="VALUE">
+                                                                                  <block type="math_arithmetic" id="689" inline="true">
+                                                                                    <field name="OP">ADD</field>
+                                                                                    <value name="A">
+                                                                                      <block type="variables_get" id="722">
+                                                                                        <field name="VAR">servo_x</field>
+                                                                                      </block>
+                                                                                    </value>
+                                                                                    <value name="B">
+                                                                                      <block type="math_number" id="723">
+                                                                                        <field name="NUM">1</field>
+                                                                                      </block>
+                                                                                    </value>
+                                                                                  </block>
+                                                                                </value>
+                                                                              </block>
+                                                                            </statement>
+                                                                            <statement name="ELSE">
+                                                                              <block type="variables_set" id="729" inline="true">
+                                                                                <field name="VAR">servo_x</field>
+                                                                                <value name="VALUE">
+                                                                                  <block type="math_arithmetic" id="730" inline="true">
+                                                                                    <field name="OP">MINUS</field>
+                                                                                    <value name="A">
+                                                                                      <block type="variables_get" id="731">
+                                                                                        <field name="VAR">servo_x</field>
+                                                                                      </block>
+                                                                                    </value>
+                                                                                    <value name="B">
+                                                                                      <block type="math_number" id="732">
+                                                                                        <field name="NUM">1</field>
+                                                                                      </block>
+                                                                                    </value>
+                                                                                  </block>
+                                                                                </value>
+                                                                              </block>
+                                                                            </statement>
+                                                                          </block>
+                                                                        </next>
+                                                                      </block>
+                                                                    </next>
+                                                                  </block>
+                                                                </next>
+                                                              </block>
+                                                            </next>
+                                                          </block>
+                                                        </next>
+                                                      </block>
+                                                    </statement>
+                                                    <next>
+                                                      <block type="servosetangle" id="605">
+                                                        <field name="servo">servo</field>
+                                                        <field name="angle">servo_x</field>
+                                                        <next>
+                                                          <block type="imshow" id="35" inline="false">
+                                                            <field name="windowname">mywin</field>
+                                                            <value name="image">
+                                                              <block type="variables_get" id="36">
+                                                                <field name="VAR">r_img</field>
+                                                              </block>
+                                                            </value>
+                                                            <next>
+                                                              <block type="waitkey" id="37">
+                                                                <field name="millis">40</field>
+                                                                <field name="key">q</field>
+                                                                <statement name="statement">
+                                                                  <block type="controls_flow_statements" id="38">
+                                                                    <field name="FLOW">BREAK</field>
+                                                                  </block>
+                                                                </statement>
+                                                              </block>
+                                                            </next>
+                                                          </block>
+                                                        </next>
+                                                      </block>
+                                                    </next>
+                                                  </block>
+                                                </next>
+                                              </block>
+                                            </next>
+                                          </block>
+                                        </next>
+                                      </block>
+                                    </statement>
+                                  </block>
+                                </next>
+                              </block>
+                            </next>
+                          </block>
+                        </next>
+                      </block>
+                    </next>
+                  </block>
+                </next>
+              </block>
+            </next>
+          </block>
+        </next>
+      </block>
+    </next>
+  </block>
+</xml>
