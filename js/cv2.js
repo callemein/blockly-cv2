@@ -387,9 +387,9 @@ Blockly.Blocks['videocapture'] = {
         .appendField("VideoCapture")
         .appendField(new Blockly.FieldTextInput("0"), "input")
         .appendField("breedte")
-        .appendField(new Blockly.FieldTextInput("1240"), "w")
+        .appendField(new Blockly.FieldTextInput("1280"), "w")
         .appendField("hoogte")
-        .appendField(new Blockly.FieldTextInput("720"), "h")
+        .appendField(new Blockly.FieldTextInput("960"), "h")
         .appendField("Snelheid")
         .appendField(new Blockly.FieldTextInput("25"), "fps")
         .appendField(new Blockly.FieldVariable('img'), 'img');
@@ -798,6 +798,94 @@ Blockly.Python['rotate'] = function(block) {
   var code = "rows,cols = " + input +".shape[:2]\n"+
              "M = cv2.getRotationMatrix2D((cols/2,rows/2)," + angle + ",1)\n"+
               output + " = cv2.warpAffine(" + input + ",M,(cols,rows))\n";
+  return code;
+};
+
+
+Blockly.Blocks['drawrectangle'] = {
+  init: function() {
+    
+    this.setColour(19);  
+    this.appendDummyInput()
+        .appendField("Draw Rectangle");
+    this.appendValueInput('image')
+        .setCheck('image')
+        .appendField('image');
+        
+    this.appendValueInput('tl')
+        .setCheck('point')
+        .appendField('tl');
+        
+    this.appendValueInput('br')
+        .setCheck('point')
+        .appendField('br');
+        
+    this.appendValueInput('color')
+        .setCheck('Colour')
+        .appendField('color');
+        
+    this.appendDummyInput()
+        .appendField("size")
+        .appendField(new Blockly.FieldTextInput("2"), "size")
+        
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+    this.setTooltip('');
+  }
+};
+
+Blockly.Python['drawrectangle'] = function(block) {
+  var image = Blockly.Python.valueToCode(block, 'image', Blockly.Python.ORDER_ATOMIC);
+  var tl = Blockly.Python.valueToCode(block, 'tl', Blockly.Python.ORDER_ATOMIC);
+  var br = Blockly.Python.valueToCode(block, 'br', Blockly.Python.ORDER_ATOMIC);
+  var color = Blockly.Python.valueToCode(block, 'color', Blockly.Python.ORDER_ATOMIC);
+  var size = block.getFieldValue('size');
+
+  var code = "cv2.rectangle(" + image + ", " + tl + ", " + br + ", " + color + ", " + size+ ")\n";
+  return code;
+};
+
+
+Blockly.Blocks['drawcircle'] = {
+  init: function() {
+    
+    this.setColour(19);  
+    this.appendDummyInput()
+        .appendField("Draw Circle");
+    this.appendValueInput('image')
+        .setCheck('image')
+        .appendField('image');
+        
+    this.appendValueInput('center')
+        .setCheck('point')
+        .appendField('center');
+        
+    this.appendDummyInput()
+        .appendField("radius")
+        .appendField(new Blockly.FieldTextInput("10"), "radius")
+        
+    this.appendValueInput('color')
+        .setCheck('Colour')
+        .appendField('color');
+        
+    this.appendDummyInput()
+        .appendField("size")
+        .appendField(new Blockly.FieldTextInput("2"), "size")
+        
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+    this.setTooltip('');
+  }
+};
+
+Blockly.Python['drawcircle'] = function(block) {
+  var image = Blockly.Python.valueToCode(block, 'image', Blockly.Python.ORDER_ATOMIC);
+  var center = Blockly.Python.valueToCode(block, 'center', Blockly.Python.ORDER_ATOMIC);
+  var radius = block.getFieldValue('radius');
+  var color = Blockly.Python.valueToCode(block, 'color', Blockly.Python.ORDER_ATOMIC);
+  var size = block.getFieldValue('size');
+
+  var code = "cv2.rectangle(" + image + ", " + center + ", " + radius + ", " + color + ", " + size+ ")\n";
   return code;
 };
 
