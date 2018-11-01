@@ -1,12 +1,14 @@
 from io import StringIO
 import sys, socket, threading, time, datetime, os
-from multiprocessing import Process
+from multiprocessing import Process, Queue
 import cv2
 import numpy as np
 
-global Threads
+global gThreads
+global qQueue
 
-threads = []
+qQueue = Queue()
+gThreads = []
 
 class MyThread( threading.Thread ):
     def __init__(self, code):
@@ -29,7 +31,8 @@ class MyThread( threading.Thread ):
         return self._stop_event.is_set()
         
 
-def RunProgram(code):
+def RunProgram(queue):
+    code = queue.get()
     try:
         exec( compile(code, "lala", "exec") )
     except Exception as e:
@@ -72,7 +75,6 @@ def load(environ):
     return code
 
 def application(environ, start_response):
-
     url = environ['PATH_INFO'];
     data = ""
     if url == "/":
@@ -80,9 +82,9 @@ def application(environ, start_response):
     if url.startswith('/code'):
         sys.stdout = sys.stderr = mystdout = StringIO()
         try:          
-            new_thread = Process(target=RunProgram, args=(postdata(environ),))
-            threads.append(new_thread)
-
+            qQueue.put(postdata(environ))
+            new_thread = Process(target=RunProgram, args=(qQueue,))
+            gThreads.append(new_thread)
             new_thread.start()
             
             #exec( compile( postdata(environ), "blockly", "exec" ) )
@@ -94,7 +96,7 @@ def application(environ, start_response):
         sys.stderr = sys.__stderr__
     elif url.startswith('/stop'):
         print('Stopping Threads')
-        for t in threads:
+        for t in gThreads:
             t.terminate()
     elif url.startswith('/save_code'):
         data = save(".py",environ)
