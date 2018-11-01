@@ -131,29 +131,48 @@
 
   <xml id="toolbox" style="display: none">
 <category name="cv2">
-  <block type="videocapture"></block>
-  <block type="load"></block>
+
+<category name="interface">
   <block type="imshow"></block>
   <block type="waitkey"></block>
   <block type="onmouse"></block>
   <block type="colour_picker"></block>
+</category>
+
+<category name="frame">
+  <block type="newimage"></block>
+  <block type="load"></block>
+  <block type="copy"></block>
+  <block type="cvtcolor"></block>
+  <block type="roi"></block>
   <block type="tuple"></block>
   <block type="size"></block>
   <block type="point"></block>
   <block type="point_tl"></block>
   <block type="point_br"></block>
-  <block type="newimage"></block>
-  <block type="roi"></block>
-  <block type="copy"></block>
-  <block type="indexed"></block>
-  <block type="imgsize"></block>
-  <block type="convertTo"></block>
-  <block type="cascade"></block>
-  <block type="findobjects"></block>
+  <block type="rotate"></block>
+</category>
+
+<category name="video">
+  <block type="videocapture"></block>
   <block type="VideoWriter_VideoWriter"></block>
   <block type="VideoWriter_write"></block>
 </category>
+
+<category name="detecting">
+  <block type="cascade"></block>
+  <block type="findobjects"></block>
+</category>
+
+</category>
   <!--
+  
+    <category name="ignored">
+      <block type="indexed"></block>
+      <block type="imgsize"></block>
+      <block type="convertTo"></block>
+    </category>
+  
   <category name="core">
     <category name="Manipulate">
       <block type="core_flip"></block>
