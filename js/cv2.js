@@ -276,7 +276,7 @@ Blockly.Blocks['cascade'] = {
     this.appendDummyInput()
         .appendField("create")
         .appendField(new Blockly.FieldVariable('cascade'), 'cascade')
-        .appendField(new Blockly.FieldTextInput("opencv/data/haarcascades/haarcascade_frontalface_alt2.xml"), "xmlfile");
+        .appendField(new Blockly.FieldTextInput("haarcascades/haarcascade_frontalface_alt2.xml"), "xmlfile");
     this.setPreviousStatement(true);
     this.setNextStatement(true);
     this.setTooltip('');
